@@ -34,18 +34,18 @@ class UserController {
         if(validation.fails()){
             return validation.messages()
         }
-        else{
-            const user = await User.create({
-                username    : request.body.username,
-                email       : request.body.email,
-                password    : await Hash.make(request.body.password)
-            })
+        
+        const user = await User.create({
+            username    : request.body.username,
+            email       : request.body.email,
+            password    : await Hash.make(request.body.password)
+        })
 
-            return response.json({
-                message : 'Successfully created',
-                data    : user 
-            });
-        }
+        return response.json({
+            message : 'Successfully created',
+            data    : user 
+        });
+        
 
     }
 
@@ -82,7 +82,7 @@ class UserController {
         }
         
         await user.delete();
-        
+
         return response.json({
             message : 'Data Successfully deleted',
             id      : id
