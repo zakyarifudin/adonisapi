@@ -6,6 +6,7 @@ const Hash = use('Hash')
 
 
 class UserController {
+    
     async index({response}) {
         const users = await User.all();
         return response.json({
@@ -38,7 +39,7 @@ class UserController {
         const user = await User.create({
             username    : request.body.username,
             email       : request.body.email,
-            password    : await Hash.make(request.body.password)
+            password    : request.body.password
         })
 
         return response.json({
@@ -56,6 +57,7 @@ class UserController {
             message : 'success',
             data    : user
         });
+
     }
 
     async update ({ request, response , params: {id} }) {
