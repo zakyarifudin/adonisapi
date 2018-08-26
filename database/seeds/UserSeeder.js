@@ -18,15 +18,15 @@ class UserSeeder {
   async run () {
     //Gawe Seeder
     User.create({
-      username: 'zaky',
-      email: 'zaky@mail.com',
-      password: await Hash.make('zaky')
+      username  : 'zaky',
+      email     : 'zaky@mail.com',
+      password  : 'zaky'
     });
 
     User.create({
-      username: 'arif',
-      email: 'arif@mail.com',
-      password: await Hash.make('arif')
+      username  : 'arif',
+      email     : 'arif@mail.com',
+      password  : 'arif'
     });
   }
 }
