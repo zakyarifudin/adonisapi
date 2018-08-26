@@ -14,7 +14,7 @@ class AuthController {
     }
 
     async profile({ response, auth }) {
-        return response.send(auth.current.user)
+        return response.send(auth.user)
     }
 
     async refreshToken({ request, auth }) {
