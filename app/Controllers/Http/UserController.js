@@ -8,7 +8,7 @@ const Hash = use('Hash')
 class UserController {
     
     async index({response}) {
-        const users = await User.all();
+        const users = await User.query().with('posts').fetch();
         return response.json({
             message : 'success',
             data    : users
