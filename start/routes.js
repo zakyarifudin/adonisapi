@@ -23,3 +23,12 @@ Route.group(() => {
   Route.delete('/:id', 'UserController.destroy');
 })
 .prefix('api/user');
+
+Route.group(() => {
+  Route.get('' , 'PostController.index').middleware(['auth']);
+  Route.post('', 'PostController.store').middleware(['auth']);
+  Route.get('/:id', 'PostController.show').middleware(['auth']);
+  Route.put('/:id', 'PostController.update').middleware(['auth']);
+  Route.delete('/:id', 'PostController.destroy').middleware(['auth']);
+})
+.prefix('api/post');
