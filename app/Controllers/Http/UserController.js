@@ -27,6 +27,7 @@ class UserController {
             'username.unique'   : 'Username sudah dipakai, coba username lain',
             'email.required'    : 'Email harus diisi',
             'email.unique'      : 'Email sudah dipakai, coba email lain',
+            'email.email'       : 'Email harus benar',
             'password.required' : 'Password harus diisi' 
         }
 
@@ -63,6 +64,7 @@ class UserController {
     async update ({ request, response , params: {id} }) {
         const user = await User.find(id)
         user.username = request.body.username;
+        user.email    = request.body.email;
 
         await user.save();
 
