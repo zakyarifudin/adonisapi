@@ -8,10 +8,13 @@ const Hash = use('Hash')
 class UserController {
     
     async index({response}) {
-        const users = await User.query().with('posts').fetch();
+        const users = await User.query()
+                        .with('posts')
+                        .fetch();
+
         return response.json({
-            message : 'success',
-            data    : users
+            status : 'success',
+            result : users
         });
     }
 
@@ -43,9 +46,17 @@ class UserController {
             password    : request.body.password
         })
 
+        if(!user){
+            return response.json({
+                status  : 'fail',
+                message : 'Something Wrong'
+            });
+        }
+
         return response.json({
-            message : 'Successfully created',
-            data    : user 
+            status  : 'success',
+            message : 'Successfully registered',
+            result  : user 
         });
         
 
@@ -55,8 +66,8 @@ class UserController {
         const user = await User.find(id)
         
         return response.json({
-            message : 'success',
-            data    : user
+            status  : 'success',
+            result  : user
         });
 
     }
@@ -69,6 +80,7 @@ class UserController {
         await user.save();
 
         return response.json({
+            status  : 'success',
             message : 'Successfully updated',
             data    : user
         });
@@ -80,16 +92,17 @@ class UserController {
 
         if(user==null){
             return response.json({
-                message     : 'Failed to delete',
-                description : 'Data Not Found'
+                status  : 'fail',    
+                message : 'User Not Found'
             });
         }
         
         await user.delete();
 
         return response.json({
+            status  : 'success',
             message : 'Data Successfully deleted',
-            id      : id
+            result  : id
         });
     }
 }
