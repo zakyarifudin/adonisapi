@@ -17,16 +17,28 @@ const Hash = use('Hash')
 class UserSeeder {
   async run () {
     //Gawe Seeder
-    User.create({
+    await User.create({
       username  : 'zaky',
       email     : 'zaky@mail.com',
       password  : 'zaky'
     });
 
-    User.create({
+    await User.create({
       username  : 'arif',
       email     : 'arif@mail.com',
       password  : 'arif'
+    });
+
+    await User.create({
+      username  : 'luthfi',
+      email     : 'luthfi@mail.com',
+      password  : 'luthfi'
+    });
+
+    await User.create({
+      username  : 'afan',
+      email     : 'afan@mail.com',
+      password  : 'afan'
     });
   }
 }
