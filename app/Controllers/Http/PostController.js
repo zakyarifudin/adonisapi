@@ -8,8 +8,23 @@ const { validate, validateAll } = use('Validator');
 class PostController {
     
     async index ({response, auth}) {
+        const posts = await Post.query()
+                            .with('comments.user')
+                            .fetch()
+        
+        return response.json({
+            status  : 'success',
+            result  : posts
+        })
+    }
+    
+    async own ({response, auth}) {
         const posts = await  Database.from('posts').where('user_id', auth.user.id);
-        return posts;
+        
+        return response.json({
+            status  : 'success',
+            result  : posts
+        })
     }
 
     async store({ request, response, auth }) {
@@ -35,14 +50,22 @@ class PostController {
                     });
         
         return response.json({
+            status  : 'success', 
             message : 'Post successfully created',
-            post : post
+            result  : post
         })
     }
 
     async show ({ response, params: {id} }) {
-        const post = Post.find(id)
-        return post;
+        const post = await Post.query()
+                    .with('comments.user')
+                    .where('id',id)
+                    .first();
+
+        return response.json({
+            status  : 'success', 
+            result  : post
+        })
     }
 
     async update({ request, response, params:{id}, auth }) {
@@ -54,7 +77,8 @@ class PostController {
 
         if(post == null){
             return response.json({
-                message: 'Failed to update post',
+                status : 'fail',
+                message: 'Failed to update post not found'
             })
         }
 
@@ -62,8 +86,9 @@ class PostController {
         await post.save();
         
         return response.json({
+            status  : 'success',
             message : 'Post successfully updated',
-            post    : post
+            result  : post
             
         })
 
@@ -78,15 +103,17 @@ class PostController {
 
         if(post == null){
             return response.json({
-                message: 'Failed to delete post',
+                status : 'fail',
+                message: 'Failed to delete post not found',
             })
         }
 
         await post.delete();
         
         return response.json({
+            status  : 'success',
             message : 'Post successfully deleted',
-            post    : id       
+            result  : id       
         })
     }
 
