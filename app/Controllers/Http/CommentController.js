@@ -47,19 +47,22 @@ class CommentController {
         
         const user = await User.find(auth.user.id);
 
-        const comment = await user.comments()
-                    .create({
-                        post_id     : post_id,
-                        comment     : request.body.comment
-                    });
-        
-        if(!comment){
+        const post = await Post.find(post_id);
+
+        if(!post){
             return response.json({
                 status  : 'fail',
                 message : 'Post is not available',
             })
         }
-        
+
+
+        const comment = await user.comments()
+                    .create({
+                        post_id     : post_id,
+                        comment     : request.body.comment
+                    });
+
         return response.json({
             status  : 'success',
             message : 'Comment successfully created',
@@ -103,7 +106,7 @@ class CommentController {
         if(comment == null){
             return response.json({
                 status  : 'fail',
-                message : 'Failed to Comment not Found',
+                message : 'Failed to Delete Comment not Found',
             })
         }
 

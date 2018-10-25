@@ -28,7 +28,10 @@ class AuthController {
         const apiToken = auth.getAuthHeader()
         await auth
             .revokeTokens([apiToken])
-        return response.send({ message: 'Logout successfully!'})
+        return response.json({
+            status : 'success', 
+            message: 'Logout successfully!'
+        })
     }
 
 }
