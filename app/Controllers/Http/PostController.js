@@ -6,21 +6,21 @@ const Post = use('App/Models/Post');
 const { validate, validateAll } = use('Validator');
 
 class PostController {
-    
+
     async index ({response, auth}) {
         const posts = await Post.query()
                             .with('comments.user')
                             .fetch()
-        
+
         return response.json({
             status  : 'success',
             result  : posts
         })
     }
-    
+
     async own ({response, auth}) {
         const posts = await  Database.from('posts').where('user_id', auth.user.id);
-        
+
         return response.json({
             status  : 'success',
             result  : posts
@@ -29,28 +29,31 @@ class PostController {
 
     async store({ request, response, auth }) {
         const rules = {
+            title           : 'required',
             description     : 'required'
         }
 
         const messages = {
-            'description.required' : 'Deskripsi harus diisi' 
+            'title.required'       : 'Judul harus diisi',
+            'description.required' : 'Deskripsi harus diisi'
         }
-        
+
         const validation = await validateAll(request.all(), rules, messages)
 
         if(validation.fails()){
             return validation.messages()
         }
-        
+
         const user = await User.find(auth.user.id);
 
         const post = await user.posts()
                     .create({
+                        title       : request.body.title,
                         description : request.body.description
                     });
-        
+
         return response.json({
-            status  : 'success', 
+            status  : 'success',
             message : 'Post successfully created',
             result  : post
         })
@@ -63,7 +66,7 @@ class PostController {
                     .first();
 
         return response.json({
-            status  : 'success', 
+            status  : 'success',
             result  : post
         })
     }
@@ -84,15 +87,15 @@ class PostController {
 
         post.description = request.body.description;
         await post.save();
-        
+
         return response.json({
             status  : 'success',
             message : 'Post successfully updated',
             result  : post
-            
+
         })
 
-        
+
     }
 
     async destroy({ response, params: {id}, auth }) {
@@ -109,11 +112,11 @@ class PostController {
         }
 
         await post.delete();
-        
+
         return response.json({
             status  : 'success',
             message : 'Post successfully deleted',
-            result  : id       
+            result  : id
         })
     }
 

@@ -1,5 +1,7 @@
 'use strict'
 
+const Env       = use('Env');
+const Mail      = use('Mail');
 const Database  = use('Database');
 const User      = use('App/Models/User');
 const Post      = use('App/Models/Post');
@@ -36,15 +38,15 @@ class CommentController {
         }
 
         const messages = {
-            'comment.required' : 'Komentar harus diisi' 
+            'comment.required' : 'Komentar harus diisi'
         }
-        
+
         const validation = await validateAll(request.all(), rules, messages)
 
         if(validation.fails()){
             return validation.messages()
         }
-        
+
         const user = await User.find(auth.user.id);
 
         const post = await Post.find(post_id);
@@ -56,17 +58,30 @@ class CommentController {
             })
         }
 
-
         const comment = await user.comments()
                     .create({
                         post_id     : post_id,
                         comment     : request.body.comment
                     });
 
+        const post_user = await post.user().fetch();
+        const data = {
+            username    : post_user.username,
+            url         : Env.get('VIEW_URL') + '/discussion/' + post.id
+        };
+
+        const send = await Mail.send('email.notification', data, (message) => {
+          message
+            // .to('muh.afan.azmi@gmail.com', 'Afan')
+            .to(post_user.email, post_user.username)
+            .from('notification@chatify.com', 'Chatify')
+            .subject('Check Your Post')
+        });
+
         return response.json({
             status  : 'success',
             message : 'Comment successfully created',
-            result  : comment
+            result  : send
         })
     }
 
@@ -86,15 +101,15 @@ class CommentController {
 
         comment.comment = request.body.comment;
         await comment.save();
-        
+
         return response.json({
             status  : 'success',
             message : 'Comment successfully updated',
             result  : comment
-            
+
         })
 
-        
+
     }
 
     async destroy({ response, params: {id}, auth }) {
@@ -111,11 +126,11 @@ class CommentController {
         }
 
         await comment.delete();
-        
+
         return response.json({
             status    : 'success',
             message   : 'Comment successfully deleted',
-            result    : id       
+            result    : id
         })
     }
 }
