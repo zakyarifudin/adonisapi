@@ -9,6 +9,7 @@ class PostController {
 
     async index ({response, auth}) {
         const posts = await Post.query()
+                            .with('user')
                             .with('comments.user')
                             .fetch()
 
