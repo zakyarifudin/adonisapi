@@ -18,6 +18,7 @@ Route.group(() => {
 Route.group(() => {
   Route.get('' , 'UserController.index');
   Route.post('', 'UserController.store');
+  Route.post('/find-or-create', 'UserController.findOrCreate');
   Route.get('/:id', 'UserController.show');
   Route.put('/:id', 'UserController.update');
   Route.delete('/:id', 'UserController.destroy');
@@ -25,7 +26,7 @@ Route.group(() => {
 .prefix('api/user');
 
 Route.group(() => {
-  //post 
+  //post
   Route.get('' , 'PostController.index').middleware(['auth']);
   Route.get('/own' , 'PostController.own').middleware(['auth']);
   Route.post('', 'PostController.store').middleware(['auth']);
@@ -42,6 +43,6 @@ Route.group(() => {
 
 Route.group(() => {
   Route.get('/by-post/:post_id' , 'CommentController.byPost').middleware(['auth']);
-  Route.get('/by-user/:user_id' , 'CommentController.byUser').middleware(['auth']); 
+  Route.get('/by-user/:user_id' , 'CommentController.byUser').middleware(['auth']);
 })
 .prefix('api/comment');

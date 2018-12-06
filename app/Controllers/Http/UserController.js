@@ -1,12 +1,13 @@
 'use strict'
 
 const { validate, validateAll } = use('Validator')
+const Database = use('Database')
 const User = use('App/Models/User')
 const Hash = use('Hash')
 
 
 class UserController {
-    
+
     async index({response}) {
         const users = await User.query()
                         .with('posts')
@@ -31,7 +32,7 @@ class UserController {
             'email.required'    : 'Email harus diisi',
             'email.unique'      : 'Email sudah dipakai, coba email lain',
             'email.email'       : 'Email harus benar',
-            'password.required' : 'Password harus diisi' 
+            'password.required' : 'Password harus diisi'
         }
 
         const validation = await validateAll(request.all(), rules, messages)
@@ -39,7 +40,7 @@ class UserController {
         if(validation.fails()){
             return validation.messages()
         }
-        
+
         const user = await User.create({
             username    : request.body.username,
             email       : request.body.email,
@@ -56,15 +57,15 @@ class UserController {
         return response.json({
             status  : 'success',
             message : 'Successfully registered',
-            result  : user 
+            result  : user
         });
-        
+
 
     }
 
     async show ({ response, params: {id} }) {
         const user = await User.find(id)
-        
+
         return response.json({
             status  : 'success',
             result  : user
@@ -92,11 +93,11 @@ class UserController {
 
         if(user==null){
             return response.json({
-                status  : 'fail',    
+                status  : 'fail',
                 message : 'User Not Found'
             });
         }
-        
+
         await user.delete();
 
         return response.json({
@@ -104,6 +105,11 @@ class UserController {
             message : 'Data Successfully deleted',
             result  : id
         });
+    }
+
+    async findOrCreate({ request, response }) {
+        return request;
+        // const user = await  Database.from('users').where('provider_id', request.body.id).first();
     }
 }
 
