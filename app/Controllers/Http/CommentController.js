@@ -67,7 +67,7 @@ class CommentController {
         const post_user = await post.user().fetch();
         const data = {
             username    : post_user.username,
-            url         : Env.get('VIEW_URL') + '/discussion/' + post.id
+            url         : Env.get('VIEW_URL') + '/question/' + post.id
         };
 
         const send = await Mail.send('email.notification', data, (message) => {
