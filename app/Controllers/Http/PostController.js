@@ -11,6 +11,7 @@ class PostController {
         const posts = await Post.query()
                             .with('user')
                             .with('comments.user')
+                            .orderBy('created_at', 'desc')
                             .fetch()
 
         return response.json({
@@ -62,6 +63,7 @@ class PostController {
 
     async show ({ response, params: {id} }) {
         const post = await Post.query()
+                    .with('user')
                     .with('comments.user')
                     .where('id',id)
                     .first();
