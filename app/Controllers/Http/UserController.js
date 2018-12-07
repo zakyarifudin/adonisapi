@@ -108,8 +108,39 @@ class UserController {
     }
 
     async findOrCreate({ request, response }) {
-        return request;
-        // const user = await  Database.from('users').where('provider_id', request.body.id).first();
+        const user = await User.query()
+                    .where('provider_id',request.body.provider_id)
+                    .first();
+                    
+        if (user == null) {
+            const user = await User.create({
+                username    : request.body.name,
+                email       : request.body.email,
+                password    : request.body.provider_id,
+                provider    : request.body.provider,
+                provider_id : request.body.provider_id
+            });
+
+            if(!user){
+                return response.json({
+                    status  : 'fail',
+                    message : 'Something Wrong'
+                });
+            }
+
+            return response.json({
+                status  : 'success',
+                message : 'registered',
+                result  : user
+            });
+
+        } else {
+            return response.json({
+                status     : 'success',
+                message    : 'found',
+                result     : user
+            });
+        }
     }
 }
 
