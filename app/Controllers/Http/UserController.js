@@ -111,6 +111,42 @@ class UserController {
         return request;
         // const user = await  Database.from('users').where('provider_id', request.body.id).first();
     }
+
+    async checkEmail({request, response}){
+        const user = await User.query()
+                        .where('email', request.body.email)
+                        .first();
+        if(user==null){
+            return response.json({
+                status  : 'success',
+                result  : 'Email tersedia'
+            });
+        }
+
+        return response.json({
+            status  : 'fail',
+            message : 'Email sudah dipakai'
+        });
+
+    }
+
+    async checkUsername({request, response}){
+        const user = await User.query()
+                        .where('username', request.body.username)
+                        .first();
+        if(user==null){
+            return response.json({
+                status  : 'success',
+                result  : 'Username tersedia'
+            });
+        }
+
+        return response.json({
+            status  : 'fail',
+            message : 'Username sudah dipakai'
+        });
+
+    }
 }
 
 module.exports = UserController

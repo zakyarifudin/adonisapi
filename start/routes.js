@@ -22,6 +22,8 @@ Route.group(() => {
   Route.get('/:id', 'UserController.show');
   Route.put('/:id', 'UserController.update');
   Route.delete('/:id', 'UserController.destroy');
+  Route.post('/check-email','UserController.checkEmail');
+  Route.post('/check-username','UserController.checkUsername');
 })
 .prefix('api/user');
 
